@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+    <meta charset='UTF-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>CS Class Scheduling</title>
+    <link rel='stylesheet' href='stylesheets/scheduling.css'>
+    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+</head>
+<body>
+    <h1>CS Class Scheduling App</h1>
+
+    <form id='classSelect' action='/cs-class-submission' method='POST'>
+        <div id='dropdown'>
+            <span class='anchor'>Choose your CS Class</span>
+            <ul class='options'>
+                <!-- This unordered list will be dynamically filled by JS -->
+            </ul>
+        </div>
+
+        <input id='submit-btn' type='submit' value='Submit'>
+
+    </form>
+
+    <script>
+        let csClasses = [<%- csClasses %>];
+        let form = document.getElementById('classSelect');
+        let classListDropdown = document.getElementsByClassName('options')[0];
+        // Dynamically add checkbox inputs to the html form
+        let index = 1;
+        csClasses.forEach(csClass => {
+            let optionContainer = document.createElement('li');
+            let classOptionGroup = document.createElement('div');
+            let classOptionLabel = document.createElement('label');
+            let classOption = document.createElement('input');
+            let classZoomLabel = document.createElement('label');
+            let classZoom = document.createElement('input');
+            let classLocationLabel = document.createElement('label');
+            let classLocation = document.createElement('input');
+            /**
+             * The value of the option to be submitted when html form is submitted will be the index of the corresponding
+             * csClass object in the array of csClasses in classes.js.
+             * 
+             * Also add optional text boxes for zoom link and location of the class
+             */
+            optionContainer.setAttribute('class', 'class-option-container');
+
+            classOptionGroup.setAttribute('class', 'class-option-group');
+            classOptionGroup.innerHTML = csClass;
+
+            classOptionLabel.setAttribute('for', `class${index}`);
+
+            classOption.setAttribute('type', 'checkbox');
+            classOption.setAttribute('id', `class${index}`);
+            classOption.setAttribute('name', `class${index}[index]`);
+            classOption.setAttribute('value', index - 1);
+            classOption.setAttribute('class', 'class-option');
+
+            classZoomLabel.setAttribute('for', `class${index}Zoom`);
+            classZoomLabel.setAttribute('class', 'text-label hidden-option');
+            classZoomLabel.innerHTML = 'Zoom Link (optional)';
+
+            classZoom.setAttribute('type', 'text');
+            classZoom.setAttribute('name', `class${index}[zoomLink]`);
+            classZoom.setAttribute('id', `class${index}Zoom`);
+            classZoom.setAttribute('class', 'hidden-option text-field');
+
+            classLocationLabel.setAttribute('for', `class${index}Location`);
+            classLocationLabel.setAttribute('class', 'text-label hidden-option');
+            classLocationLabel.innerHTML = 'Location (optional)';
+
+            classLocation.setAttribute('type', 'text');
+            classLocation.setAttribute('name', `class${index}[location]`);
+            classLocation.setAttribute('id', `class${index}Location`);
+            classLocation.setAttribute('class', 'hidden-option text-field');
+
+            classOptionGroup.appendChild(classOptionLabel);
+            classOptionGroup.appendChild(classOption);
+            optionContainer.appendChild(classOptionGroup);
+            optionContainer.appendChild(classZoomLabel);
+            optionContainer.appendChild(classZoom);
+            optionContainer.appendChild(classLocationLabel);
+            optionContainer.appendChild(classLocation);
+            classListDropdown.appendChild(optionContainer);
+
+            index++;
+        });
+    </script>
+    <script src='javascripts/scheduling.js'></script>
+</body>
+</html>

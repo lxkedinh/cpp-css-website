@@ -1,0 +1,54 @@
+#classSelect {
+    display: flex;
+    flex-flow: row;
+}
+/* the clickable dropdown button */
+.anchor {
+    padding: 2px;
+    border: 1px solid black;
+    display: inline-block;
+}
+
+#dropdown {
+    margin-right: 1rem;
+}
+
+#dropdown ul.options {
+    padding: 3px;
+    display: none;
+    margin: 0;
+    border: 1px solid black;
+}
+
+#dropdown ul.options li {
+    list-style: none;
+    display: flex;
+    flex-flow: column nowrap;
+}
+
+#dropdown.visible .options {
+    display: flex;
+    flex-flow: column nowrap;
+    overflow-x: hidden;
+    overflow-y: auto;
+    width: 35vw;
+}
+
+.class-option-container {
+    margin-bottom: 1rem;
+}
+
+.class-option-group {
+    display: flex;
+    flex-flow: row nowrap;
+}
+
+.hidden-option {
+    display: none;
+}
+
+#submit-btn {
+    align-self: right;
+    display: block;
+    height: 100%;
+}
