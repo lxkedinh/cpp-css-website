@@ -20,9 +20,10 @@ let { convertTime } = require('./timeConversion');
  *      - "TH" indicates Thursday
  *      - "FR" indicates Friday
  *      - "SA" indicates Saturday
+ * @param {String} instructionMode - instruction mode of the class ie. fully synchronous online, fully face-to-face instruction on campus, etc.
  */
 class csClass {
-    constructor(name, catalogNumber, sectionNumber, startDate, startTime, endDate, endTime, professor, classDays) {
+    constructor(name, catalogNumber, sectionNumber, startDate, startTime, endDate, endTime, professor, classDays, instructionMode) {
         /**
          * @private
          */
@@ -31,17 +32,32 @@ class csClass {
         this.sectionNumber = sectionNumber;
 
         // the first day of class
-        this.start = new Date(startDate);
+        this.start = new Date();
+        let startDateSplit = startDate.split('-');
+        let startYear = startDateSplit[0];
+        let startMonth = startDateSplit[1] - 1;
+        let startDay = startDateSplit[2];
+        this.start.setFullYear(startYear, startMonth, startDay);
+
         // the time that the class starts
+        this.startTime12Hour = startTime;
+        // convert to 24 hour time format for javascript date object
         let convertedStartTime = convertTime(startTime);
         let startTimeSplit = convertedStartTime.split(':');
         this.start.setHours(startTimeSplit[0]);
         this.start.setMinutes(startTimeSplit[1]);
-        
+
         // the last day of class
-        this.end = new Date(endDate);
+        this.end = new Date(`${endDate}T00:00:00`);
+        let endDateSplit = endDate.split('-');
+        let endYear = endDateSplit[0];
+        let endMonth = endDateSplit[1] - 1;
+        let endDay = endDateSplit[2];
+        this.end.setFullYear(endYear, endMonth, endDay);
         // the time that the class ends
-        this.endTime = new Date(startDate);
+        this.endTime12Hour = endTime;
+        // convert to 24 hour time format for javascript date object
+        this.endTime = new Date(`${startDate}T00:00:00`);
         let convertedEndTime = convertTime(endTime);
         let endTimeSplit = convertedEndTime.split(':');
         this.endTime.setHours(endTimeSplit[0]);
@@ -49,6 +65,7 @@ class csClass {
         
         this.professor = professor;
         this.classDays = classDays;
+        this.instructionMode = instructionMode;
     }
 
     // getter methods
@@ -131,11 +148,6 @@ class csClass {
 
     set setClassDays(newDays) {
         this.classDays = newDays;
-    }
-
-    // toString() to represent the class in text form to display on the web app
-    toString() {
-        return `'${this.name} Section ${this.sectionNumber} taught by ${this.professor}\'`;
     }
 }
 

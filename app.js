@@ -71,7 +71,31 @@ app.get('/googleoauthcallback', (req, res) => {
 });
 
 app.get('/cs-class-scheduling', (req, res) => {
-    res.render('scheduling', {csClasses: csClasses});
+    let classSearchNames = [];
+
+    /**
+     * filter through csClasses to find unique classes to list as an entry in drop down list
+     */
+    let catalogNumber = 0;
+    for (let i = 0; i < csClasses.length; i++) {
+        let currentClass = csClasses[i];
+
+        if (currentClass.getCatalogNumber == catalogNumber) {
+            continue;
+        }
+        /**
+         * the current class is a unique class and append it to classSearchNames to send to html drop down list
+         */
+        else {
+            classSearchNames.push(`CS ${currentClass.getCatalogNumber} - ${currentClass.getName}`);
+            catalogNumber = currentClass.getCatalogNumber;
+        }
+    }
+
+    res.render('scheduling', {
+        csClasses: JSON.stringify(csClasses),
+        classSearchNames: JSON.stringify(classSearchNames)
+    });
 });
 
 // create a new calendar object to create events on the user's primary calendar
@@ -83,46 +107,15 @@ const LA = 'America/Los_Angeles';
 // the user is redirected to this route if a cs class was successfully chosen
 app.post('/cs-class-submission', (req, res) => {
     // access HTML form data with JSON
+    res.send(JSON.stringify(req.body));
     let JSONstring = JSON.stringify(req.body);
     let entries = JSON.parse(JSONstring);
     // empty variables for app success or error
     let successString = ``, complainString = ``, scheduleConflict = false;
 
     // iterate through each class option
-    Object.keys(entries).forEach(classIndex => {
-        let currentClassOption = entries[classIndex];
-
-        // skip classes that were not selected
-        if (currentClassOption['index'] == null) {
-            return;
-        }
-
-        // initialize empty event object
-        let event = {
-            summary: null,
-            start: {
-                dateTime: null,
-                timeZone: LA,
-            },
-            end: {
-                dateTime: null,
-                timeZone: LA,
-            },
-            colorId: 11,
-            recurrence: null,
-            location: null,
-            description: null,
-        }
-
-        // enter the zoom link and location values if the user inputted them
-        if (currentClassOption['zoomLink'] != '') {
-            event.description = currentClassOption['zoomLink'];
-        }
-        if (currentClassOption['location'] != '') {
-            event.location = currentClassOption['location'];
-        }
-                
-        let currentClass = csClasses[currentClassOption['index']];
+    Object.values(entries).forEach(index => {
+        let currentClass = csClasses[index - 1];
         // the UNTIL property in RRULE needs a date in the format of YYYYMMDD
         let endDateStr = (String(currentClass.getEndDate.getFullYear()));
         let formatMonth, formatDay;
@@ -141,13 +134,29 @@ app.post('/cs-class-submission', (req, res) => {
         }
         endDateStr = endDateStr.concat(formatMonth, formatDay);
 
+        // initialize empty event object
+        let event = {
+            summary: null,
+            start: {
+                dateTime: null,
+                timeZone: LA,
+            },
+            end: {
+                dateTime: null,
+                timeZone: LA,
+            },
+            colorId: 11,
+            recurrence: null,
+            location: null,
+            description: null,
+        }
+
         // fill in empty event object properties with the chosen class
         event.summary = currentClass.getName;
         event.start.dateTime = currentClass.getStartDate;
         event.end.dateTime = currentClass.getStartDateEndTime;
         event.recurrence = [`RRULE:FREQ=WEEKLY;BYDAY=${currentClass.getClassDays};UNTIL=${endDateStr}`];
 
-        
         // Check to see if the user is busy at the chosen time slot for the class
         calendar.freebusy.query({
             resource: {
@@ -180,6 +189,30 @@ app.post('/cs-class-submission', (req, res) => {
             return complainString += `The app could not schedule your ${event.summary} class because you are busy from ${event.start.dateTime} to ${event.end.dateTime}.\n`;
         });
     });
+
+
+
+
+    // Object.values(entries).forEach(classIndex => {
+    //     let currentClassOption = entries[classIndex];
+
+    //     // skip classes that were not selected
+    //     if (currentClassOption['index'] == null) {
+    //         return;
+    //     }
+
+        
+
+    //     // enter the zoom link and location values if the user inputted them
+    //     if (currentClassOption['zoomLink'] != '') {
+    //         event.description = currentClassOption['zoomLink'];
+    //     }
+    //     if (currentClassOption['location'] != '') {
+    //         event.location = currentClassOption['location'];
+    //     }
+                
+        
+    // });
 
     // console.log('complainString: ', complainString);
     // console.log('successString: ', successString);

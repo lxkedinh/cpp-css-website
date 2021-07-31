@@ -829,6 +829,7 @@ footer ul {
 
 .comp-sci-logo {
     order: 3;
+    transform: scale(0.5);
 }
 
 .comp-sci-logo img {
