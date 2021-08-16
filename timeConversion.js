@@ -5,8 +5,8 @@ function convertTime(timeString) {
     let timeSplit = stringSplit[0].split(':');
     let hours = timeSplit[0];
     let minutes = timeSplit[1];
-    // check if PM time, then convert to 24 hour time
-    if (stringSplit[1] == 'PM') {
+    // check if PM time, then convert to 24 hour time but exception for 12 pm
+    if (stringSplit[1] == 'PM' && hours != 12) {
         hours = (String)((Number)(hours) + 12);
     }
 

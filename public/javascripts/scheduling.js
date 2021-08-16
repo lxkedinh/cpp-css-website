@@ -79,10 +79,14 @@ $(document).ready(() => {
     let cartSelection = document.getElementById('shopping-cart-selection');
     document.querySelectorAll('.add-class-button').forEach(button => {
         button.addEventListener('click', () => {
+            button.style.display = 'none';
             let cartDeleteBttn = document.createElement('img');
             cartDeleteBttn.setAttribute('src', 'images/delete button.svg');
             cartDeleteBttn.setAttribute('class', 'cart-delete-button');
-            cartDeleteBttn.addEventListener('click', () => { cartItemContainer.remove() });
+            cartDeleteBttn.addEventListener('click', () => {
+                cartDeleteBttn.parentElement.remove();
+                button.style.display = 'block';
+            });
             cartDeleteBttn.addEventListener('mouseover', () => { cartDeleteBttn.setAttribute('src', 'images/delete button hover.svg') });
             cartDeleteBttn.addEventListener('mouseout', () => { cartDeleteBttn.setAttribute('src', 'images/delete button.svg') });
     

@@ -131,6 +131,7 @@ body {
     border-radius: 25px;
     padding: 1rem;
     flex: 1 1 0px;
+    max-width: 80%;
 }
 
 .section-description-1 {
@@ -309,9 +310,13 @@ body {
     display: flex;
     flex-flow: row nowrap;
     align-items: center;
-    justify-content: space-around;
+    justify-content: flex-start;
 
     transition: all ease-in-out 0.75s;
+}
+
+.cart-delete-button {
+    margin-right: 10rem;
 }
 
 #submit-button {

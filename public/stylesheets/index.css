@@ -1,81 +1,8 @@
-/* import google fonts */
-@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400&family=PT+Sans&display=swap');
+/**
+ * Mobile home page rules
+ */
 
-/* 
-==================
-Table of Contents
-==================
-1. Variables
-2. General webpage structure
-3. Typography
-4. Components
-*/
-
-/* 
-=============
-1. Variables
-=============
-*/
-:root {
-    --green: #00ff6c;
-    --blue: #73c2fb;
-    --gray: #5a5a5a;
-    --dark-gray: #2f2f2f;
-    --red: #ca2440;
-}
-
-/* 
-=============================
-2. General webpage structure
-=============================
-*/
-
-* {
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
-    font-family: 'PT Sans', sans-serif;
-}
-
-html {
-    overflow-x: hidden;
-    font-size: 16px;
-}
-
-body {
-    display: flex;
-    flex-flow: column nowrap;
-    scroll-behavior: smooth;
-    background: url('../images/cpp.jpg');
-    object-fit: cover;
-    background-attachment: fixed;               /* home page parallax */
-}
-
-/* general design rules (fonts, headings, button styles, colors) */
-section {
-    background-color: #fff;
-    height: 100vh;
-    width: 100vw;
-    padding: 0 5%;
-    margin: auto;
-}
-
-/* 
-==============
-3. Typography
-==============
-*/
-
-/* 
-==============
-4. Components
-==============
-*/
-
-/* 
-Navigation bar rules
---------------- 
-*/
+/* navigation bar rules */
 .header {
     display: flex;
     flex-flow: row nowrap;
@@ -181,15 +108,7 @@ Navigation bar rules
     text-align: center;
 }
 
-/* temporarily hide stuff */
-body img {
-    display: none;                              /* remove this after mobile design */
-}
-
-/*
-Buttons
-------------
-*/
+/* button rules */
 .button {
     text-decoration: none;
     font-family: 'Josefin Sans', 'sans-serif';
@@ -215,7 +134,7 @@ Buttons
         transform: translateY(-0.5rem);
     }
 }
-    
+
 .scroll-indicator-container {
     position: fixed;
     bottom: 2%;
@@ -308,7 +227,8 @@ header {
     margin: 1rem 0;
 }
 
-.inner h1 {                 /* add blur to website title */
+/* add blur to website title */
+.inner h1 {
     text-shadow: 1px 1px 2px #90d0ee;
     font-size: 3rem;
     margin: 1rem 0;
@@ -322,7 +242,6 @@ header {
 
 /* about section rules */
 #about {
-    /* this is important, used to manually position the graphics in this section */
     position: relative;
     display: flex;
     flex-flow: column nowrap;
@@ -343,7 +262,6 @@ header {
 
 .about-computer {
     max-width: 20rem;
-    display: initial;               /* remove after done with mobile design */
     order: 3;
 }
 
@@ -400,7 +318,6 @@ header {
 }
 
 .mission-card-image {
-    display: initial;               /* remove after done with mobile design */
     max-height: 10rem;
     order: 1;
     position: absolute;
@@ -410,7 +327,7 @@ header {
 
 /* this image requires different rules to align with the other mission images */
 .first-mission-card-image {
-    left: 20%;
+    left: 25%;
 }
 
 /* e-board section rules */
@@ -531,13 +448,10 @@ header {
     overflow-y: visible;
 }
 
-/* hide desktop events title */
-.events-grid .events-title {
-    display: none;
-}
-
-/* hide desktop events item containers */
-.events-item-container {
+/* hide desktop events elements */
+.events-grid .events-title,
+.events-item-container,
+#events > img {
     display: none;
 }
 
@@ -723,7 +637,9 @@ header {
     justify-content: space-between;
 }
 
-#projects .circle {
+/* hide desktop projects elements */
+#projects .circle,
+.projects-banner {
     display: none;
 }
 
@@ -765,10 +681,6 @@ header {
     width: 100%;
 }
 
-.projects-banner {
-    display: none;
-}
-
 /* footer rules */
 footer {
     background-color: #222;
@@ -795,7 +707,9 @@ footer ul {
     order: 1;
 }
 
-.email-form {
+/* hide footer desktop elements */
+.email-form,
+.footer-nav-links {
     display: none;
 }
 
@@ -821,10 +735,6 @@ footer ul {
     color: white;
     text-decoration: none;
     outline: none;
-}
-
-.footer-nav-links {
-    display: none;
 }
 
 .comp-sci-logo {
@@ -989,10 +899,8 @@ footer ul {
         margin-left: 4rem;
     }
 
-    .hamburger-menu-container {
-        display: none;
-    }
-
+    /* hide mobile navigation bar elements */
+    .hamburger-menu-container,
     .navigation-menu-exit-wrapper {
         display: none;
     }
@@ -1391,11 +1299,12 @@ footer ul {
         height: auto;
     }
 
-    .events-semester {
-        display: none;
-    }
-
-    .mobile-events-grid {
+    /* hide mobile events rules */
+    .events-semester,
+    .mobile-events-grid,
+    #events > .events-title-container,
+    .events-mobile-background,
+    .mobile-events-desc-container {
         display: none;
     }
 
@@ -1418,19 +1327,6 @@ footer ul {
 
     #events > * {
         margin: 0 auto;
-    }
-
-    /* hide mobile events title */
-    #events > .events-title-container {
-        display: none;
-    }
-
-    .events-mobile-background {
-        display: none;
-    }
-
-    .mobile-events-desc-container {
-        display: none;
     }
 
     .events-item-container,
@@ -1992,14 +1888,9 @@ footer ul {
         justify-content: center;
     }
 
-    footer .decoration-circle-container {
-        display: none;
-    }
-
-    .mobile-footer-banner {
-        display: none;
-    }
-
+    /* hide mobile footer elements */
+    footer .decoration-circle-container,
+    .mobile-footer-banner,
     .top-button {
         display: none;
     }

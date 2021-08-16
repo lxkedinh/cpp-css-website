@@ -1,18 +1,19 @@
 let express = require('express');
 let router = express.Router();
+let { csClass } = require('../csClass');
+let { csClasses } = require('../classes');
+let { calendar } = require('../calendar');
 
 // POST class submission page.
 router.post('/', (req, res) => {
     // access HTML form data with JSON
-    res.send(JSON.stringify(req.body));
     let JSONstring = JSON.stringify(req.body);
     let entries = JSON.parse(JSONstring);
-    // empty variables for app success or error
-    let successString = ``, complainString = ``, scheduleConflict = false;
 
     // iterate through each class option
     Object.values(entries).forEach(index => {
         let currentClass = csClasses[index - 1];
+        console.log(currentClass.start.getHours());
         // the UNTIL property in RRULE needs a date in the format of YYYYMMDD
         let endDateStr = (String(currentClass.getEndDate.getFullYear()));
         let formatMonth, formatDay;
@@ -36,17 +37,19 @@ router.post('/', (req, res) => {
             summary: null,
             start: {
                 dateTime: null,
-                timeZone: LA,
+                timeZone: 'America/Los_Angeles',
             },
             end: {
                 dateTime: null,
-                timeZone: LA,
+                timeZone: 'America/Los_Angeles',
             },
             colorId: 11,
             recurrence: null,
             location: null,
             description: null,
         }
+
+        console.log(event);
 
         // fill in empty event object properties with the chosen class
         event.summary = currentClass.getName;
@@ -59,68 +62,34 @@ router.post('/', (req, res) => {
             resource: {
                 timeMin: event.start.dateTime,
                 timeMax: event.end.dateTime,
-                timeZone: LA,
+                timeZone: 'America/Los_Angeles',
                 items: [{ id: 'primary' }],
             },
         }, (error, response) => {
             if (error) return console.error('Free Busy Query Error: ', error);
             // creates an array of events on the calendar that are also in the same allotted time slot
             const eventsArray = response.data.calendars.primary.busy;
-            // console.log('How many events are already in time slot: ', eventsArray.length);
             // Check if there are no events on the calendar in the same time slot
             if (eventsArray.length == 0) {
                 // insert a new calendar event
-                return calendar.events.insert({
+                calendar.events.insert({
                     calendarId: 'primary',
                     resource: event
                 }, error => {
                     if (error) return console.error('Calendar Event Creation Error: ', error);
-
-                    return successString += `Google Calendar event for ${currentClass.getName} successfully created!\n`;
+                    return;
                 });
 
-                
+                // Successful redirect if classes could be added to user's google calendar
+                return res.redirect('/calendar-success');
             }
             // Complain to the user that they are busy on the allotted time slot in their primary calendar
             scheduleConflict = true;
-            return complainString += `The app could not schedule your ${event.summary} class because you are busy from ${event.start.dateTime} to ${event.end.dateTime}.\n`;
+
+            module.exports = event;
+            return res.redirect('/calendar-failure');
         });
     });
-
-
-
-
-    // Object.values(entries).forEach(classIndex => {
-    //     let currentClassOption = entries[classIndex];
-
-    //     // skip classes that were not selected
-    //     if (currentClassOption['index'] == null) {
-    //         return;
-    //     }
-
-        
-
-    //     // enter the zoom link and location values if the user inputted them
-    //     if (currentClassOption['zoomLink'] != '') {
-    //         event.description = currentClassOption['zoomLink'];
-    //     }
-    //     if (currentClassOption['location'] != '') {
-    //         event.location = currentClassOption['location'];
-    //     }
-                
-        
-    // });
-
-    // console.log('complainString: ', complainString);
-    // console.log('successString: ', successString);
-    // console.log(scheduleConflict);
-    // Respond to user that all the google calendar events were successfully created or complain if there's a schedule conflict
-    if (scheduleConflict) {
-        res.send(complainString);
-    }
-    else {
-        res.send(successString);
-    }
 })
 
 module.exports = router;

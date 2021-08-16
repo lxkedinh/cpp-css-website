@@ -54,10 +54,8 @@ $(document).ready(function() {
 
     // desktop media query
     let desktop = window.matchMedia('(min-width: 768px)');
-    // large desktop resolution media query
 
     // about section elements
-    // these need to be declared here to prevent the elements inside the section clipping on mobile design
     const aboutTitle = document.querySelector('.about-title');
     const typingComputer = document.querySelector('.about-computer');
     const aboutDesc = document.querySelector('.about-desc-wrapper');
@@ -735,7 +733,6 @@ $(document).ready(function() {
          E-board Section Parallax
         ==========================
         */
-
         const eboardHeight = eboard.offsetHeight;
         const eboardOffset = eboard.getBoundingClientRect();
         const eboardTitle = document.querySelector('.e-board-title');
